@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 
 // 正式環境：從 public 資料夾讀取 JSON
-const JSON_URL = '/戀愛人格表.json';
+const JSON_URL = '/data.json';
 
 // --- 工具函式 ---
 const parseRisk = (text) => {
