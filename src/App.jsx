@@ -19,27 +19,46 @@ const parseRisk = (text) => {
 };
 
 const mapProfileForUI = (profile) => {
-  const c = profile.content || {};
-  const type = profile.type || '';
-  const category = type.includes('·') ? type.split('·')[0] : type.includes('（') ? type.split('（')[0] : '其他';
-  
+  const d = profile.data || {}; 
+  const risk = profile.risk || { aggressor: 5, victim: 5 };
+  const analysis = profile.analysis || {};
+
   return {
     id: profile.id,
-    title: type,
-    category,
-    emotional:  c['情緒模組'] || '',
-    cognitive:  c['認知模組'] || '',
-    behavioral: c['行為模組'] || '',
-    attachment: c['依附模組'] || '',
-    background: c['人格發展背景'] || '',
-    control:    c['控制模組'] || '',
-    submission: c['順從_被控制模組'] || '',
-    defense:    c['防衛機制'] || '',
-    interaction: c['關係不同階段的互動模式'] || '',
-    dialogue:    c['常見內在對話'] || '',
-    coldRead: [c['冷讀模組'] || '', c['冷讀句'] ? `\n\n💬 冷讀金句：\n${c['冷讀句']}` : ''].join('').trim(),
-    caseStudy: c['案例_細節'] || '',
-    risk: parseRisk(c['加害_受害風險']),
+    title: profile.type,
+    category: profile.category,
+    tags: profile.tags || [], // 新增標籤
+    
+    // 核心資料
+    emotional: d.emotional,
+    cognitive: d.cognitive,
+    behavioral: d.behavioral,
+    attachment: d.attachment,
+    
+    // 深層資料
+    background: d.background,
+    control: d.control,
+    submission: d.submission,
+    defense: d.defense,
+    
+    // 實戰資料
+    interaction: d.interaction,
+    dialogue: d.dialogue,
+    // 組合冷讀模組與金句
+    coldRead: [d.cold_read, d.cold_sentence ? `\n\n💬 金句：${d.cold_sentence}` : ''].join(''),
+    caseStudy: d.case,
+    
+    // 風險與分析 (直接讀取，不用再 parse 了)
+    risk: {
+      aggressor: risk.aggressor,
+      victim: risk.victim,
+      label_a: risk.desc_a, // 括號內的備註
+      label_v: risk.desc_v
+    },
+    
+    // 新增：黑化與救援
+    darkAnalysis: analysis.dark_side,
+    survivalGuide: analysis.guide
   };
 };
 
